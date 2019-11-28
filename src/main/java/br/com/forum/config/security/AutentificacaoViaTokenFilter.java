@@ -10,6 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class AutentificacaoViaTokenFilter extends OncePerRequestFilter {
+	
+	private TokenService tokenService;
+	
+	public AutentificacaoViaTokenFilter(TokenService tokenService) {
+		this.tokenService = tokenService;
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -17,6 +23,9 @@ public class AutentificacaoViaTokenFilter extends OncePerRequestFilter {
 		
 		String token = recuperarToken(request);
 		System.out.println("Token na AutenficacaoViaTokenFilter: "+token);
+		
+		boolean valido = tokenService.isTokenValido(token);
+		System.out.println("Verificando se toke é válido: "+valido);
 		
 		filterChain.doFilter(request, response);
 	}
